@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💼 HITUNG GAJI ANGGOTA BORSIN TENUN</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4da3ff">
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        background-color: #f8fbff;
+        color: #003366;
+        padding: 10px;
+        zoom: 0.9;
+    }
+    h1 {
+        text-align: center;
+        background: #4da3ff;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    form {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+    }
+    input, select {
+        padding: 8px;
+        margin: 5px 0;
+        width: 100%;
+        border: 1px solid #bcdcff;
+        border-radius: 8px;
+    }
+    button {
+        background: #4da3ff;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        width: 100%;
+        margin-top: 8px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #2d8cff;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        white-space: nowrap;
+        border-radius: 10px;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 850px;
+    }
+    th, td {
+        border: 1px solid black;
+        text-align: left;
+        padding: 8px;
+    }
+    th {
+        background: #e8f3ff;
+    }
+    /* Sticky kolom pertama dan kedua */
+    th:first-child, td:first-child {
+        position: sticky;
+        left: 0;
+        background: #e8f3ff;
+        z-index: 2;
+    }
+    th:nth-child(2), td:nth-child(2) {
+        position: sticky;
+        left: 35px;
+        background: #e8f3ff;
+        z-index: 2;
+    }
+    /* Kolom jumlah rata tengah */
+    table td:nth-child(4),
+    table th:nth-child(4) {
+        text-align: center;
+    }
+
+    .aksi-btn {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+    }
+    .edit-btn {
+        background: #ffc107;
+        border: none;
+        padding: 5px 8px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: black;
+    }
+    .hapus-btn {
+        background: #ff4d4d;
+        border: none;
+        padding: 5px 8px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .total-box {
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .total-box p {
+        margin: 5px 0;
+        font-weight: bold;
+    }
+
+    .potongan-group {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .potongan-group label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+</style>
+</head>
+<body>
+
+<h1>💼 HITUNG GAJI ANGGOTA BORSIN TENUN</h1>
+
+<form id="formGaji">
+  
+    <label>Nama Karyawan:</label>
+    <input list="daftarNama" id="nama" placeholder="Ketik atau pilih nama" required>
+    <datalist id="daftarNama">
+        <option>Bapak Ifan</option><option>Mak ifan</option><option>Bapak karles</option><option>Mak karles</option>
+        <option>Bapak cerry</option><option>Mak Cerry</option><option>Efe</option><option>Meni</option>
+        <option>Dilan</option><option>Wati</option><option>Rian</option><option>Edi</option>
+        <option>David</option><option>Lian</option><option>Sela</option><option>Yunaldin</option>
+        <option>Mesi</option><option>Bapak Nova</option><option>Mak Nova</option>
+        <option>Bapak farel</option><option>Mak farel</option><option>Mare</option>
+        <option>Ani</option><option>Turi</option>
+    </datalist>
+
+    <label>Keterangan:</label>
+    <input list="daftarUlos" id="jenisUlos" placeholder="Ketik atau pilih jenis ulos" required>
+    <datalist id="daftarUlos">
+        <option>Sarung</option><option>Selendang</option><option>Sepan</option><option>Sarung140</option>
+        <option>Selendang110</option><option>Bekah bulu180</option><option>Bekah buku110</option>
+        <option>Moria150</option><option>Moria130</option><option>Ragibara</option>
+        <option>Sigara-gara180</option><option>sigara-gara100</option><option>Sigara-gara60</option>
+        <option>Polos</option><option>Nucuk sarung</option><option>Nucuk selendang</option>
+    </datalist>
+
+    <input type="number" id="jumlah" placeholder="Jumlah" required>
+
+    <label>Potongan:</label>
+    <div id="potonganContainer" class="potongan-group">
+        <label><input type="checkbox" class="potongan" value="100000"> Air & Listrik (100.000)</label>
+        <label><input type="checkbox" class="potongan" value="35000"> Wifi (35.000)</label>
+        <label><input type="checkbox" class="potongan" value="20000"> Stell (20.000)</label>
+    </div>
+
+    <input type="number" id="potonganLain" placeholder="Potongan Lain (jika ada)">
+    
+    <button type="submit">➕ Tambah Data</button>
+</form>
+
+<div class="table-container">
+    <table id="tabelGaji">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Keterangan</th>
+                <th>Jumlah</th>
+                <th>Upah</th>
+                <th>Biaya Pakan</th>
+                <th>Potongan</th>
+                <th>Gaji Bersih</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="total-box" id="totalKeseluruhan">
+    <p>Jumlah Ulos Keseluruhan: <span id="totalUlos">0</span></p>
+    <p>Total Biaya Pakan: Rp <span id="totalPakan">0</span></p>
+    <p>Total Gaji Keseluruhan: Rp <span id="totalGaji">0</span></p>
+</div>
+
+<button onclick="simpanData()">💾 Simpan</button>
+<button onclick="bukaData()">📂 Buka Data</button>
+<button onclick="downloadExcel()">📊 Download Excel</button>
+<button onclick="salinWhatsApp()">📋 Salin Pesan ke WA</button>
+<button onclick="kirimWhatsApp()">📱 Kirim ke Aplikasi WhatsApp</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+const dataUlos = {
+    'Sarung': 185000, 'Selendang': 185000, 'Sepan': 235000,
+    'Sarung140': 140000, 'Selendang110': 140000,
+    'Bekah bulu180': 180000, 'Bekah buku110': 110000,
+    'Moria150': 150000, 'Moria130': 130000, 'Ragibara': 130000,
+    'Sigara-gara180': 180000, 'sigara-gara100': 100000, 'Sigara-gara60': 60000,
+    'Polos': 50000, 'Nucuk sarung':500000, 'Nucuk selendang':450000, 'MoriaGBKP150':150000
+};
+
+const biayaPakan = {
+    'Sarung': 5000, 'Selendang': 4000, 'Sepan': 5000,
+    'Sarung140': 5000, 'Selendang110': 4000, 'Bekah bulu180': 4000,
+    'Bekah buku110': 4000, 'Moria150': 4000, 'Moria130': 4000,
+    'Ragibara': 4000, 'Sigara-gara180': 5000, 'sigara-gara100': 5000,
+    'Sigara-gara60': 5000, 'Polos': 5000, 'Nucuk sarung':0,
+    'Nucuk selendang':0, 'MoriaGBKP150':4000
+};
+
+let data = [];
+let editIndex = -1;
+
+document.getElementById("formGaji").addEventListener("submit", function(e){
+    e.preventDefault();
+    const nama = document.getElementById("nama").value;
+    const jenis = document.getElementById("jenisUlos").value;
+    const jumlah = parseInt(document.getElementById("jumlah").value);
+    const potonganLain = parseInt(document.getElementById("potonganLain").value) || 0;
+
+    const potonganCheckbox = Array.from(document.querySelectorAll('.potongan:checked'))
+        .reduce((sum, cb) => sum + parseInt(cb.value), 0);
+
+    const totalPotongan = potonganCheckbox + potonganLain;
+    const upah = dataUlos[jenis] || 0;
+    const pakan = (biayaPakan[jenis] || 0) * jumlah;
+    const total = (upah * jumlah) - pakan - totalPotongan;
+
+    const item = {nama, jenis, jumlah, upah, pakan, potongan: totalPotongan, total};
+
+    if (editIndex === -1) data.push(item);
+    else { data[editIndex] = item; editIndex = -1; }
+
+    tampilData();
+    this.reset();
+    document.querySelectorAll('.potongan').forEach(cb => cb.checked = false);
+});
+
+function tampilData() {
+    const tbody = document.querySelector("#tabelGaji tbody");
+    tbody.innerHTML = "";
+    let totalUlos = 0, totalPakan = 0, totalGaji = 0;
+
+    data.forEach((d, i) => {
+        totalUlos += d.jumlah;
+        totalPakan += d.pakan;
+        totalGaji += d.total;
+        tbody.innerHTML += `
+        <tr>
+            <td>${i+1}</td>
+            <td>${d.nama}</td>
+            <td>${d.jenis}</td>
+            <td>${d.jumlah}</td>
+            <td>Rp ${d.upah.toLocaleString()}</td>
+            <td>Rp ${d.pakan.toLocaleString()}</td>
+            <td>Rp ${d.potongan.toLocaleString()}</td>
+            <td>Rp ${d.total.toLocaleString()}</td>
+            <td class="aksi-btn">
+                <button class="edit-btn" onclick="editData(${i})">Edit</button>
+                <button class="hapus-btn" onclick="hapusData(${i})">Hapus</button>
+            </td>
+        </tr>`;
+    });
+
+    document.getElementById("totalUlos").textContent = totalUlos;
+    document.getElementById("totalPakan").textContent = totalPakan.toLocaleString();
+    document.getElementById("totalGaji").textContent = totalGaji.toLocaleString();
+}
+
+function editData(i) {
+    const d = data[i];
+    document.getElementById("nama").value = d.nama;
+    document.getElementById("jenisUlos").value = d.jenis;
+    document.getElementById("jumlah").value = d.jumlah;
+    document.getElementById("potonganLain").value = 0;
+    document.querySelectorAll('.potongan').forEach(cb => cb.checked = false);
+    editIndex = i;
+}
+
+function hapusData(i) {
+    if (confirm("Yakin ingin hapus data ini?")) {
+        data.splice(i, 1);
+        tampilData();
+    }
+}
+
+function simpanData() {
+    localStorage.setItem("dataGaji", JSON.stringify(data));
+    alert("✅ Data berhasil disimpan di HP!");
+}
+
+function bukaData() {
+    const stored = localStorage.getItem("dataGaji");
+    if (stored) {
+        data = JSON.parse(stored);
+        tampilData();
+        alert("📂 Data berhasil dimuat!");
+    } else alert("❌ Belum ada data tersimpan!");
+}
+
+function downloadExcel() {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Data Gaji");
+    XLSX.writeFile(wb, "Data_Gaji_Borsin_Tenun.xlsx");
+}
+
+function salinWhatsApp() {
+    let pesan = "💼 *DATA GAJI ANGGOTA BORSIN TENUN*\n\n";
+    data.forEach((d, i) => {
+        pesan += `${i+1}. ${d.nama} - ${d.jenis}\n`;
+        pesan += `Jumlah: ${d.jumlah}, Gaji: Rp ${d.total.toLocaleString()}\n\n`;
+    });
+    navigator.clipboard.writeText(pesan);
+    alert("📋 Pesan berhasil disalin!");
+}
+
+function kirimWhatsApp() {
+    let pesan = "💼 *DATA GAJI ANGGOTA BORSIN TENUN*\n\n";
+    data.forEach((d, i) => {
+        pesan += `${i+1}. ${d.nama} - ${d.jenis}\nJumlah: ${d.jumlah}, Gaji: Rp ${d.total.toLocaleString()}\n\n`;
+    });
+    const url = "https://wa.me/6282363042719?text=" + encodeURIComponent(pesan);
+    window.location.href = url;
+}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker terdaftar'))
+    .catch(err => console.log('Service Worker gagal:', err));
+}
+</script>
+</body>
+</html>

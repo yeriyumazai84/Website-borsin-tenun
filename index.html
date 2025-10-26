@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏠 Beranda Borsin Tenun</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #dce9ff, #f8fbff);
+      min-height: 70vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    /* LOGO */
+    .logo {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    h1 {
+      color: #004aad;
+      margin-bottom: 40px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    .tombol {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 20px;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .tombol:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 15px;
+      text-align: center;
+      color: #555;
+      font-size: 14px;
+    }
+
+    footer small {
+      color: #888;
+    }
+
+    /* INPUT LOGO TERSEMBUNYI */
+    input[type="file"] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo Upload -->
+  <label for="uploadLogo">
+    <img src="logo.png" id="logo" class="logo" alt="Logo Borsin Tenun">
+  </label>
+  <input type="file" id="uploadLogo" accept="image/*" onchange="gantiLogo(event)">
+
+  <h1>🏠 Beranda Borsin Tenun</h1>
+
+  <div class="menu">
+    <button class="tombol" onclick="window.location.href='gaji.html'">💼 Hitung Gaji Anggota</button>
+    <button class="tombol" onclick="window.location.href='galeri.html'">🧶 Galeri Ulos</button>
+  </div>
+
+  <footer>
+    <p>Borsin Tenun © 2025<br><small>Dikelola oleh Yeriyuma Zai,AMd.Kom</small></p>
+  </footer>
+
+  <script>
+    // Simpan logo di localStorage agar tetap muncul setelah ditutup
+    const logo = document.getElementById('logo');
+
+    window.onload = function() {
+      const logoSimpan = localStorage.getItem('logoBorsin');
+      if (logoSimpan) {
+        logo.src = logoSimpan;
+      }
+    };
+
+    function gantiLogo(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          logo.src = e.target.result;
+          localStorage.setItem('logoBorsin', e.target.result);
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+
+</body>
+</html>
