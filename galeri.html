@@ -3,42 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🧶 Galeri Ulos Super Interaktif</title>
+<title>🧶 Galeri Ulos Borsin Tenun</title>
 <style>
 body {
   font-family: 'Segoe UI', sans-serif;
   margin:0; padding:0 15px 120px 15px;
   background:#f0f4ff; display:flex; flex-direction:column; align-items:center; min-height:100vh;
 }
+
 /* HEADER */
 header {
   width:100%; background:#004aad; color:white;
-  padding:15px; text-align:center; position:sticky; top:0; z-index:100;
+  padding:20px; text-align:center; position:sticky; top:0; z-index:100;
 }
 header button {
-  position:absolute; left:15px; top:15px; background:white; color:#004aad;
+  position:absolute; left:15px; top:10px; background:white; color:#004aad;
   border:none; padding:8px 15px; border-radius:8px; font-weight:bold; cursor:pointer;
 }
 header h1 { margin:0; font-size:26px; }
+
 /* PENCARIAN */
 #pencarian {
   width:90%; max-width:350px; padding:10px; border-radius:12px;
   border:1px solid #aaa; margin:20px 0; font-size:16px;
 }
+
 /* UPLOAD AREA */
 .upload-area {
   background:#fff; border-radius:20px; box-shadow:0 6px 15px rgba(0,0,0,0.1);
   padding:25px; width:100%; max-width:450px; text-align:center; margin-bottom:20px;
 }
-/* GALERI HORIZONTAL */
+
+/* GALERI GRID */
 .galeri {
-  display:flex; overflow-x:auto; gap:20px; width:100%; max-width:900px;
-  scroll-behavior:smooth; padding-bottom:20px;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap:20px;
+  width:100%; max-width:900px;
 }
 .item {
-  min-width:180px; border-radius:15px; overflow:hidden; flex-shrink:0;
-  background:white; box-shadow:0 4px 12px rgba(0,0,0,0.1); position:relative;
-  transition:transform 0.3s;
+  border-radius:15px; overflow:hidden;
+  background:white; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  position:relative; transition:transform 0.3s;
 }
 .item img {
   width:100%; height:180px; object-fit:cover; cursor:pointer;
@@ -46,17 +52,18 @@ header h1 { margin:0; font-size:26px; }
 .item:hover { transform:translateY(-5px); }
 .nama { text-align:center; font-weight:bold; font-size:14px; padding:6px 0 10px 0; color:#333; }
 
-/* LIGHTBOX SLIDE */
+/* LIGHTBOX FADE */
 .lightbox {
   position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95);
   display:none; justify-content:center; align-items:center; flex-direction:column; z-index:999;
-  overflow:hidden;
+  overflow:hidden; transition:opacity 0.5s ease;
+  opacity:0;
 }
+.lightbox.show { display:flex; opacity:1; }
 .lightbox img {
   max-width:80%; max-height:70%; border-radius:12px; box-shadow:0 0 25px rgba(255,255,255,0.3);
-  position:absolute; transition: transform 0.4s ease, opacity 0.4s ease;
+  transition:opacity 0.5s ease;
 }
-.lightbox img.hidden { opacity:0; pointer-events:none; }
 .lightbox .close, .lightbox .prev, .lightbox .next {
   position:absolute; background:rgba(255,255,255,0.85); border:none; padding:12px 20px;
   border-radius:12px; font-size:18px; cursor:pointer; transition:background 0.2s;
@@ -65,7 +72,7 @@ header h1 { margin:0; font-size:26px; }
 .lightbox .prev { left:20px; top:50%; transform:translateY(-50%); }
 .lightbox .next { right:20px; top:50%; transform:translateY(-50%); }
 .lightbox button:hover { background:rgba(255,255,255,1); }
-.lightbox .action-btns { position:absolute; bottom:90px; display:flex; gap:15px; }
+.lightbox .action-btns { position:absolute; bottom:90px; display:flex; gap:15px; flex-wrap:wrap; justify-content:center; }
 .lightbox .thumbnails {
   position:absolute; bottom:10px; display:flex; gap:10px; overflow-x:auto; max-width:90%; padding:5px;
 }
@@ -85,13 +92,19 @@ footer button { background:none; border:none; color:white; font-weight:bold; cur
 footer button:hover { text-decoration:underline; }
 
 @media (max-width:500px){ .item img { height:140px; } .lightbox img { max-height:60%; } .lightbox .thumbnails img { width:50px; height:50px; } }
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+  margin-top: 20px; /* turun 20px supaya tombol tidak menimpa */
+}
 </style>
 </head>
 <body>
 
 <header>
   <button onclick="window.location.href='index.html'">🏠 Beranda</button>
-  <h1>🧶 Galeri Ulos Super Interaktif</h1>
+  <h1>🧶 Galeri Ulos Borsin Tenun</h1>
 </header>
 
 <input type="text" id="pencarian" placeholder="🔍 Cari nama ulos..." onkeyup="cariUlos()">
@@ -105,10 +118,9 @@ footer button:hover { text-decoration:underline; }
 
 <div class="lightbox" id="lightbox">
   <button class="close" onclick="tutupLightbox()">✖ Tutup</button>
-  <button class="prev" onclick="prevGambar()">⬅️</button>
+  <button class="prev" onclick="slideGambar(-1)">⬅️</button>
   <img id="gambarLightbox" src="">
-  <img id="gambarNext" class="hidden" src="">
-  <button class="next" onclick="nextGambar()">➡️</button>
+  <button class="next" onclick="slideGambar(1)">➡️</button>
   <div class="action-btns">
     <button onclick="editNamaLightbox()">✏️ Edit Nama</button>
     <button onclick="downloadLightbox()">⬇️ Download</button>
@@ -129,16 +141,12 @@ const galeri=document.getElementById('galeriUlos');
 const pencarian=document.getElementById('pencarian');
 const lightbox=document.getElementById('lightbox');
 const gambarLightbox=document.getElementById('gambarLightbox');
-const gambarNext=document.getElementById('gambarNext');
 const thumbnails=document.getElementById('thumbnails');
 const jumlahFoto=document.getElementById('jumlahFoto');
 const terakhirUpload=document.getElementById('terakhirUpload');
 
 let currentIndex=0;
 let galeriData=[];
-
-// Touch swipe
-let startX=0;
 
 window.onload=muatUlangGaleri;
 
@@ -181,72 +189,67 @@ function buatThumbnail(item,index){
   const img=document.createElement('img');
   img.src=item.src; 
   img.className=index===currentIndex?'active':'';
-  img.onclick=()=> bukaLightbox(index);
+  img.onclick=()=> slideToIndex(index);
   thumbnails.appendChild(img);
 }
 
 function updateThumbnails(){
-  Array.from(thumbnails.children).forEach((img,i)=>{
-    img.className=i===currentIndex?'active':'';
-  });
+  Array.from(thumbnails.children).forEach((img,i)=>{ img.className=i===currentIndex?'active':''; });
 }
 
 function bukaLightbox(index){
   currentIndex=index;
-  lightbox.style.display='flex';
-  gambarLightbox.style.transform='translateX(0)'; gambarLightbox.style.opacity='1';
+  lightbox.classList.add('show');
+  gambarLightbox.style.opacity=0;
   gambarLightbox.src=galeriData[index].src;
+  setTimeout(()=>{ gambarLightbox.style.opacity=1; },50);
   updateThumbnails();
 }
 
-function tutupLightbox(){ lightbox.style.display='none'; }
-
-function prevGambar(){ slideGambar(-1); }
-function nextGambar(){ slideGambar(1); }
+function tutupLightbox(){ lightbox.classList.remove('show'); }
 
 function slideGambar(direction){
   if(galeriData.length<2) return;
-  const nextIndex=(currentIndex+direction+galeriData.length)%galeriData.length;
-  gambarNext.src=galeriData[nextIndex].src;
-  gambarNext.classList.remove('hidden');
-  gambarNext.style.transform=`translateX(${direction*100}%)`;
-  setTimeout(()=>{ 
-    gambarLightbox.style.transition='transform 0.4s ease';
-    gambarNext.style.transition='transform 0.4s ease';
-    gambarLightbox.style.transform=`translateX(${-direction*100}%)`;
-    gambarNext.style.transform='translateX(0)';
-  },50);
+  currentIndex=(currentIndex+direction+galeriData.length)%galeriData.length;
+  gambarLightbox.style.opacity=0;
   setTimeout(()=>{
-    gambarLightbox.src=galeriData[nextIndex].src;
-    gambarLightbox.style.transition='none'; gambarLightbox.style.transform='translateX(0)';
-    gambarNext.classList.add('hidden'); gambarNext.style.transition='none';
-    currentIndex=nextIndex; updateThumbnails();
-  },450);
+    gambarLightbox.src=galeriData[currentIndex].src;
+    gambarLightbox.style.opacity=1;
+    updateThumbnails();
+  },300);
+}
+
+function slideToIndex(index){
+  if(index===currentIndex) return;
+  currentIndex=index;
+  slideGambar(0);
 }
 
 function editNamaLightbox(){
-  let namaBaru=prompt("Masukkan nama baru untuk ulos:", galeriData[currentIndex].nama);
-  if(namaBaru!==null){ galeriData[currentIndex].nama=namaBaru;
-    localStorage.setItem('galeriUlos',JSON.stringify(galeriData));
-    muatUlangGaleri(); updateThumbnails();
+  let namaBaru = prompt("Masukkan nama baru untuk ulos:", galeriData[currentIndex].nama);
+  if(namaBaru !== null){
+    galeriData[currentIndex].nama = namaBaru;
+    localStorage.setItem('galeriUlos', JSON.stringify(galeriData));
+    muatUlangGaleri();
+    updateThumbnails();
   }
 }
 
 function downloadLightbox(){
-  const link=document.createElement('a');
-  link.href=galeriData[currentIndex].src;
-  link.download=galeriData[currentIndex].nama+".jpg";
+  const link = document.createElement('a');
+  link.href = galeriData[currentIndex].src;
+  link.download = galeriData[currentIndex].nama + ".jpg";
   link.click();
 }
 
 function shareWhatsApp(){
-  const url=encodeURIComponent(galeriData[currentIndex].src);
-  window.open(`https://api.whatsapp.com/send?text=${url}`,'_blank');
+  const url = encodeURIComponent(galeriData[currentIndex].src);
+  window.open(`https://api.whatsapp.com/send?text=${url}`, '_blank');
 }
 
 function shareInstagram(){
-  const url=encodeURIComponent(galeriData[currentIndex].src);
-  alert("Copy URL ini untuk bagikan ke Instagram: "+url);
+  const url = encodeURIComponent(galeriData[currentIndex].src);
+  alert("Copy URL ini untuk bagikan ke Instagram: " + url);
 }
 
 function hapusSemua(){
@@ -259,20 +262,12 @@ function hapusSemua(){
 }
 
 function cariUlos(){
-  const kata=pencarian.value.toLowerCase();
-  const semua=document.querySelectorAll('.item');
-  galeriData.forEach((item,i)=>{ semua[i].style.display=item.nama.toLowerCase().includes(kata)?'block':'none'; });
+  const kata = pencarian.value.toLowerCase();
+  const semua = document.querySelectorAll('.item');
+  galeriData.forEach((item, i) => {
+    semua[i].style.display = item.nama.toLowerCase().includes(kata) ? 'block' : 'none';
+  });
 }
-
-// Touch swipe
-let touchStartX=0;
-gambarLightbox.addEventListener('touchstart', e=>{ touchStartX=e.touches[0].clientX; });
-gambarLightbox.addEventListener('touchend', e=>{
-  let touchEndX=e.changedTouches[0].clientX;
-  if(touchStartX-touchEndX>50) nextGambar();
-  else if(touchEndX-touchStartX>50) prevGambar();
-});
 </script>
-
 </body>
-</html>
+  </html>
